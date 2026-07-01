@@ -162,30 +162,92 @@ function Page(props) {
   return <EditableTable title={title} description="Todos os campos abaixo são editáveis. O status é selecionável." rows={data[section] || []} columns={cols} onChange={(i, k, v) => updateRow(section, i, k, v)} onAdd={() => addRow(section, cols)} onDelete={(i) => deleteRow(section, i)} />;
 }
 
-function Home({ data }) {
+function normalizeMetricValue(value) {
+  if (value === null || value === undefined) return null;
+  const raw = String(value).trim();
+  if (!raw || raw === '--') return null;
+  const cleaned = raw.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '');
+  const parsed = Number(cleaned);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function findIndicator(indicators, terms) {
+  return (indicators || []).find((item) => {
+    const title = String(item.title || '').toLowerCase();
+    return terms.every((term) => title.includes(term));
+  });
+}
+
+function metricText(value) {
+  return value === null ? 'número pendente' : `${value.toLocaleString('pt-BR')}`;
+}
+
+function buildStrategicReading(data) {
+  const indicators = data.indicators || [];
+  const db = normalizeMetricValue(findIndicator(indicators, ['dom bosco'])?.value);
+  const undb = normalizeMetricValue(findIndicator(indicators, ['undb'])?.value);
+  const med = normalizeMetricValue(findIndicator(indicators, ['medicina', 'matr'])?.value);
+  const vestibular = normalizeMetricValue(findIndicator(indicators, ['vestibular'])?.value);
+  const enem = normalizeMetricValue(findIndicator(indicators, ['enem'])?.value);
+  const transferencia = normalizeMetricValue(findIndicator(indicators, ['transfer'])?.value);
   const pending = (data.meetings || []).filter((x) => x.status !== 'Concluído').length;
   const events = (data.events || []).length;
-  const done = (data.meetings || []).filter((x) => x.status === 'Concluído').length;
+
+  const hasMainNumbers = [db, undb, med].some((value) => value !== null);
+  const totalMedDemand = [vestibular, enem, transferencia].reduce((sum, value) => sum + (value || 0), 0);
+
+  if (!hasMainNumbers) {
+    return {
+      headline: 'Assim que os números de matrícula forem preenchidos, esta área passa a mostrar a leitura estratégica da captação por negócio, com foco em onde reforçar atuação comercial, eventos e follow-up.',
+      db: 'Acompanhar matrículas 2026, agendamentos de visita e ações de relacionamento com famílias. O foco é transformar visitas e eventos em reserva de vaga.',
+      undb: 'Acompanhar matrículas 2026.2, ações por curso e conversão dos interessados gerados nas ações externas e experiências acadêmicas.',
+      med: 'Acompanhar matrícula, vestibular tradicional, ENEM e transferência externa para priorizar o canal com maior potencial de fechamento.',
+      focus: `${events} eventos mapeados e ${pending} pendências comerciais abertas para acompanhamento na reunião.`
+    };
+  }
+
+  const leader = [
+    ['Dom Bosco', db],
+    ['UNDB Graduação', undb],
+    ['Medicina', med]
+  ].filter(([, value]) => value !== null).sort((a, b) => b[1] - a[1])[0]?.[0];
+
+  return {
+    headline: `Leitura atual: ${leader ? `${leader} concentra o maior volume informado` : 'a base já tem números para leitura'}, com ${metricText(db)} matrículas Dom Bosco, ${metricText(undb)} matrículas UNDB e ${metricText(med)} matrículas Medicina. A prioridade é cruzar esses resultados com ações, eventos e pendências abertas para acelerar fechamento.`,
+    db: `Dom Bosco está com ${metricText(db)} matrículas. Priorizar visitas às escolas, relacionamento com famílias e retorno rápido dos leads gerados em ações internas e eventos.`,
+    undb: `UNDB está com ${metricText(undb)} matrículas 2026.2. Reforçar ações por curso, Clínica de Férias, experiências acadêmicas e follow-up comercial por responsável.`,
+    med: `Medicina está com ${metricText(med)} matrículas e ${totalMedDemand ? totalMedDemand.toLocaleString('pt-BR') : 'demanda ainda pendente'} inscritos/interessados somando vestibular, ENEM e transferência. O foco é separar canal com maior chance de matrícula.`,
+    focus: `${events} eventos mapeados e ${pending} pendências abertas. Usar a reunião comercial para definir responsável, prazo e próxima ação por negócio.`
+  };
+}
+
+function Home({ data }) {
+  const reading = buildStrategicReading(data);
 
   return (
     <>
-      <section className="strategyHero">
-        <div className="strategyIntro">
-          <strong>Expectativa de captação Dom Bosco + UNDB</strong>
-          <p>Usar este Hub para acompanhar onde a captação está avançando, quais ações precisam de reforço comercial e quais demandas ficaram abertas na reunião da semana.</p>
+      <section className="strategicReading">
+        <div className="readingMain">
+          <span>Leitura estratégica da captação</span>
+          <h2>Dom Bosco, UNDB e Medicina</h2>
+          <p>{reading.headline}</p>
         </div>
-        <div className="strategyGrid">
+        <div className="readingGrid">
           <article>
-            <span>Dom Bosco</span>
-            <p>Priorizar reserva de vagas, visitas às escolas, ações de relacionamento com famílias e retorno rápido dos leads gerados em eventos.</p>
+            <strong>Dom Bosco</strong>
+            <p>{reading.db}</p>
           </article>
           <article>
-            <span>UNDB Graduação</span>
-            <p>Acompanhar Clínica de Férias, ações externas, captação por curso e oportunidades para converter interessados em inscritos e matrículas.</p>
+            <strong>UNDB Graduação</strong>
+            <p>{reading.undb}</p>
           </article>
           <article>
-            <span>Foco da semana</span>
-            <p>{events} eventos mapeados, {pending} pendências abertas e {done} demandas concluídas. Atualizar responsáveis, prazos e próximos passos após a reunião comercial.</p>
+            <strong>Medicina</strong>
+            <p>{reading.med}</p>
+          </article>
+          <article>
+            <strong>Foco da semana</strong>
+            <p>{reading.focus}</p>
           </article>
         </div>
       </section>
