@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Activity, AlertTriangle, CheckCircle2, ExternalLink, LineChart, Save } from 'lucide-react';
+import { ExternalLink, LineChart, Save } from 'lucide-react';
 import './styles.css';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
@@ -169,16 +169,24 @@ function Home({ data }) {
 
   return (
     <>
-      <section className="hero">
-        <div>
-          <p className="eyebrow">Dashboard Executivo</p>
-          <h2>Indicadores principais</h2>
-          <p>Resumo limpo para diretoria e reunião comercial. A edição detalhada fica nas abas operacionais e na planilha.</p>
+      <section className="strategyHero">
+        <div className="strategyIntro">
+          <strong>Expectativa de captação Dom Bosco + UNDB</strong>
+          <p>Usar este Hub para acompanhar onde a captação está avançando, quais ações precisam de reforço comercial e quais demandas ficaram abertas na reunião da semana.</p>
         </div>
-        <div className="miniStats">
-          <span><Activity /> {events} eventos</span>
-          <span><AlertTriangle /> {pending} pendências</span>
-          <span><CheckCircle2 /> {done} concluídas</span>
+        <div className="strategyGrid">
+          <article>
+            <span>Dom Bosco</span>
+            <p>Priorizar reserva de vagas, visitas às escolas, ações de relacionamento com famílias e retorno rápido dos leads gerados em eventos.</p>
+          </article>
+          <article>
+            <span>UNDB Graduação</span>
+            <p>Acompanhar Clínica de Férias, ações externas, captação por curso e oportunidades para converter interessados em inscritos e matrículas.</p>
+          </article>
+          <article>
+            <span>Foco da semana</span>
+            <p>{events} eventos mapeados, {pending} pendências abertas e {done} demandas concluídas. Atualizar responsáveis, prazos e próximos passos após a reunião comercial.</p>
+          </article>
         </div>
       </section>
       <section className="cards">

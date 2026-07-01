@@ -63,6 +63,59 @@ main { margin-left: 300px; width: calc(100% - 300px); padding: 34px; }
 .fileBtn input { display: none; }
 .toast { position: fixed; right: 28px; bottom: 28px; background: #082b63; color: white; border-radius: 14px; padding: 14px 18px; display: flex; gap: 10px; align-items: center; z-index: 10; box-shadow: var(--shadow); }
 
+.strategyHero {
+  background: rgba(255,255,255,.92);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 22px;
+  align-items: stretch;
+}
+.strategyIntro {
+  border-right: 1px solid var(--line);
+  padding-right: 22px;
+}
+.strategyIntro strong {
+  display: block;
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: -.4px;
+  margin-bottom: 10px;
+}
+.strategyIntro p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.45;
+}
+.strategyGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.strategyGrid article {
+  background: #f6f9ff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+}
+.strategyGrid span {
+  display: block;
+  font-weight: 900;
+  color: var(--blue);
+  margin-bottom: 8px;
+}
+.strategyGrid p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.42;
+}
+
 .hero, .panel { background: rgba(255,255,255,.90); border: 1px solid var(--line); border-radius: 24px; padding: 26px; margin-bottom: 24px; box-shadow: var(--shadow); }
 .hero { display: flex; justify-content: space-between; gap: 20px; align-items: center; }
 .hero h2, .panel h2 { font-size: 25px; margin: 0 0 8px; letter-spacing: -.4px; }
@@ -82,41 +135,83 @@ main { margin-left: 300px; width: calc(100% - 300px); padding: 34px; }
 .primary .cardIcon { background: rgba(255,255,255,.16); }
 
 .panelHead { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
-.tableWrap { overflow: auto; border-radius: 16px; border: 1px solid var(--line); }
-table { width: 100%; border-collapse: collapse; min-width: 1380px; background: white; table-layout: fixed; }
-th { background: #0b438f; color: white; text-align: left; font-size: 12px; padding: 13px 11px; white-space: nowrap; }
-td { border-top: 1px solid var(--line); padding: 8px; vertical-align: top; }
+.tableWrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: white;
+  padding-bottom: 8px;
+}
+.tableWrap::-webkit-scrollbar { height: 12px; }
+.tableWrap::-webkit-scrollbar-track { background: #edf4ff; border-radius: 999px; }
+.tableWrap::-webkit-scrollbar-thumb { background: #9bb3d7; border-radius: 999px; }
+table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+  background: white;
+  table-layout: auto;
+}
+th {
+  background: #0b438f;
+  color: white;
+  text-align: left;
+  font-size: 11px;
+  line-height: 1.2;
+  padding: 12px 10px;
+  white-space: nowrap;
+}
+td {
+  border-top: 1px solid var(--line);
+  padding: 8px;
+  vertical-align: top;
+  min-height: 58px;
+}
 td input, td select, td textarea {
   width: 100%;
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 10px;
-  padding: 9px 10px;
+  padding: 8px 10px;
   color: var(--text);
   background: #fff;
-  font-size: 14px;
+  font-size: 12.5px;
   line-height: 1.25;
+  min-height: 38px;
 }
-td select { min-width: 126px; }
-td textarea { min-height: 58px; resize: vertical; }
+td input, td select { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+td textarea {
+  min-height: 72px;
+  resize: vertical;
+  overflow: auto;
+}
 
-.col-actions { width: 122px; }
-.col-date, .col-deadline { width: 128px; }
-.col-period, .col-month { width: 120px; }
-.col-status { width: 145px; }
-.col-priority { width: 118px; }
-.col-cost, .col-leads, .col-totalLeads, .col-leadsDB, .col-leadsUNDB, .col-leadsPos { width: 115px; }
-.col-title, .col-event, .col-school, .col-name { width: 185px; }
-.col-business, .col-owner, .col-block, .col-area { width: 180px; }
-.col-contact, .col-scheduledTime { width: 150px; }
-.col-demand, .col-nextAction, .col-task { width: 245px; }
-.col-notes, .col-url, .col-csvUrl { width: 300px; }
+/* Larguras globais: aplicam em TODAS as tabelas do Hub */
+.col-actions { min-width: 120px; width: 120px; }
+.col-date, .col-deadline { min-width: 145px; width: 145px; }
+.col-period, .col-month { min-width: 150px; width: 150px; }
+.col-status { min-width: 165px; width: 165px; }
+.col-priority { min-width: 145px; width: 145px; }
+.col-cost, .col-leads, .col-totalLeads, .col-leadsDB, .col-leadsUNDB, .col-leadsPos { min-width: 140px; width: 140px; }
+.col-title, .col-event, .col-school, .col-name { min-width: 225px; width: 225px; }
+.col-business { min-width: 270px; width: 270px; }
+.col-owner, .col-block, .col-area { min-width: 210px; width: 210px; }
+.col-contact, .col-scheduledTime { min-width: 180px; width: 180px; }
+.col-demand, .col-nextAction, .col-task { min-width: 360px; width: 360px; }
+.col-notes, .col-url, .col-csvUrl { min-width: 380px; width: 380px; }
 
+/* Campos com seleção precisam de espaço para o texto e a seta */
+.col-status select, .col-priority select, .col-period select, .col-month select { min-width: 100%; }
 .linkGrid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 16px; margin-bottom: 24px; }
 .powerLink { background: white; border: 1px solid var(--line); padding: 20px; border-radius: 18px; text-decoration: none; color: var(--blue); font-weight: 900; display: flex; gap: 12px; align-items: center; box-shadow: var(--shadow); }
 .empty { background: white; border: 1px dashed var(--line); border-radius: 18px; padding: 20px; color: var(--muted); }
 .adminHero { align-items: flex-start; }
 
 @media(max-width: 980px) {
+  .strategyHero { grid-template-columns: 1fr; }
+  .strategyIntro { border-right: 0; border-bottom: 1px solid var(--line); padding-right: 0; padding-bottom: 16px; }
+  .strategyGrid { grid-template-columns: 1fr; }
   .sidebar { position: relative; width: 100%; height: auto; }
   .app { display: block; }
   main { margin: 0; width: 100%; padding: 18px; }
