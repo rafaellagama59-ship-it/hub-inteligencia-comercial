@@ -1,48 +1,304 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Activity, AlertTriangle, CheckCircle2, ExternalLink, LineChart, Save } from 'lucide-react';
 import './styles.css';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import EditableTable from './components/EditableTable';
-import { defaultData } from './data/defaultData';
 import { loadData, saveData, resetData } from './utils/storage';
 import { fetchCSV } from './utils/csv';
 
-const tableConfig={
- calendar:['period','title','business','owner','status','priority','deadline','notes'],
- internal:['date','title','business','owner','status','cost','leads','notes'],
- external:['date','title','business','owner','status','cost','leads','notes'],
- events:['date','event','business','owner','status','cost','leadsDB','leadsUNDB','leadsPos','notes'],
- meetings:['date','block','owner','task','deadline','status','notes'],
- powerbi:['area','name','url'],
- sheetConfig:['key','label','csvUrl']
+const columns = {
+  calendar: ['period', 'date', 'title', 'business', 'owner', 'status', 'priority', 'cost', 'totalLeads', 'leadsDB', 'leadsUNDB', 'leadsPos', 'deadline', 'notes'],
+  calendar2027: ['period', 'date', 'title', 'business', 'owner', 'status', 'priority', 'cost', 'totalLeads', 'leadsDB', 'leadsUNDB', 'leadsPos', 'deadline', 'notes'],
+  internalActions: ['date', 'title', 'business', 'owner', 'status', 'cost', 'leads', 'notes'],
+  schoolVisits: ['date', 'school', 'business', 'owner', 'status', 'contact', 'scheduledTime', 'notes'],
+  externalActions: ['date', 'title', 'business', 'owner', 'status', 'cost', 'leads', 'notes'],
+  events: ['month', 'date', 'event', 'business', 'owner', 'status', 'cost', 'totalLeads', 'notes'],
+  businessDemands: ['business', 'demand', 'owner', 'nextAction', 'deadline', 'status', 'notes'],
+  businessEvents: ['date', 'event', 'owner', 'status', 'cost', 'leads', 'notes'],
+  meetings: ['date', 'block', 'owner', 'task', 'deadline', 'status', 'notes'],
+  powerbi: ['area', 'name', 'url'],
+  sheetConfig: ['key', 'label', 'csvUrl']
 };
-const pageInfo={
- home:['Visão Geral','Home com os principais indicadores comerciais por negócio.'],
- calendar:['Calendário Comercial','Planejamento de campanhas, ações e marcos comerciais.'],
- internal:['Ações Internas','Acompanhamento das ações internas do Grupo Dom Bosco.'],
- external:['Ações Externas','Ações de campo, eventos externos e captação.'],
- 'dom-bosco':['Escola Dom Bosco','Indicadores, ações e links do Dom Bosco Exponencial.'],
- undb:['UNDB Graduação','Acompanhamento comercial da graduação.'],
- pos:['Pós-Graduação','Acompanhamento comercial da Pós-UNDB.'],
- medicina:['Medicina','Processos seletivos, inscritos e indicadores de Medicina.'],
- events:['Eventos','Leads, custos, responsáveis e status por evento.'],
- meetings:['Reunião Comercial','Demandas geradas na reunião de segunda-feira.'],
- admin:['Configurações','Links de Power BI, CSVs da planilha e rotinas administrativas.']
+
+const pageInfo = {
+  home: ['Visão Geral', 'Home com os principais indicadores comerciais por negócio.'],
+  calendar: ['Calendário Comercial', 'Planejamento de campanhas, ações, gastos, leads e marcos comerciais.'],
+  'calendar-2027': ['Calendário 2027', 'Planejamento comercial e operacional para 2027.'],
+  internal: ['Ações Internas', 'Acompanhamento das ações internas e agendamento de visitas às escolas.'],
+  external: ['Ações Externas', 'Ações de campo, eventos externos e captação.'],
+  'dom-bosco': ['Escola Dom Bosco', 'Demandas, próximos passos, eventos e indicadores do Dom Bosco Exponencial.'],
+  undb: ['UNDB Graduação', 'Demandas, próximos passos, eventos e indicadores da graduação.'],
+  pos: ['Pós-Graduação', 'Demandas, próximos passos, eventos e indicadores da Pós-UNDB.'],
+  medicina: ['Medicina', 'Processos seletivos, demandas, eventos e indicadores de Medicina.'],
+  policlinica: ['Policlínica UNDB', 'Estratégia, lançamento do Clube de Benefícios e acompanhamento comercial.'],
+  events: ['Eventos', 'Tabela por mês com ações realizadas e próximas ações.'],
+  meetings: ['Reunião Comercial', 'Demandas geradas na reunião de segunda-feira.'],
+  admin: ['Configurações', 'Links de Power BI, CSVs da planilha e rotinas administrativas.']
 };
-function emptyRow(columns){return {id:crypto.randomUUID(),...Object.fromEntries(columns.map(c=>[c,c==='status'?'Planejado':c==='priority'?'Média':'']))}}
-function App(){const [page,setPage]=useState(location.hash?.replace('#','')||'home'); const [data,setData]=useState(loadData()); const [toast,setToast]=useState('');
- function commit(){saveData(data); setToast('Alterações salvas neste navegador.'); setTimeout(()=>setToast(''),2500)}
- function setSection(section,rows){setData(d=>({...d,[section]:rows}))}
- function updateRow(section,idx,key,value){const rows=[...(data[section]||[])]; rows[idx]={...rows[idx],[key]:value}; setSection(section,rows)}
- function addRow(section){setSection(section,[...(data[section]||[]),emptyRow(tableConfig[section])])}
- function delRow(section,idx){setSection(section,(data[section]||[]).filter((_,i)=>i!==idx))}
- async function syncSheets(){let next={...data}; for(const cfg of data.sheetConfig||[]){if(!cfg.csvUrl) continue; try{next[cfg.key]=await fetchCSV(cfg.csvUrl)}catch(e){alert(`Erro ao sincronizar ${cfg.label}`)}} setData(next); setToast('Sincronização concluída. Clique em Salvar alterações.'); setTimeout(()=>setToast(''),2500)}
- const [title,subtitle]=pageInfo[page]||pageInfo.home;
- return <div className="app"><Sidebar page={page} setPage={(p)=>{setPage(p); location.hash=p}}/><main><Header title={title} subtitle={subtitle} data={data} setData={setData} onSave={commit}/>{toast&&<div className="toast"><Save size={16}/>{toast}</div>}<Page page={page} data={data} updateRow={updateRow} addRow={addRow} delRow={delRow} syncSheets={syncSheets} setData={setData}/></main></div>}
-function Page(props){const {page,data}=props; if(page==='home') return <Home data={data}/>; if(page==='admin') return <Admin {...props}/>; if(page==='dom-bosco'||page==='undb'||page==='pos'||page==='medicina') return <Business page={page} data={data}/>; const map={calendar:'calendar',internal:'internalActions',external:'externalActions',events:'events',meetings:'meetings'}; const section=map[page]; const cols=tableConfig[page]; return <EditableTable title={pageInfo[page][0]} description="Todos os campos abaixo são editáveis. O status é selecionável." rows={data[section]||[]} columns={cols} onChange={(i,k,v)=>props.updateRow(section,i,k,v)} onAdd={()=>{const rows=[...(data[section]||[]),emptyRow(cols)]; props.setData(d=>({...d,[section]:rows}))}} onDelete={(i)=>props.setData(d=>({...d,[section]:(d[section]||[]).filter((_,idx)=>idx!==i)}))}/>}
-function Home({data}){const pending=(data.meetings||[]).filter(x=>x.status!=='Concluído').length; const events=(data.events||[]).length; const done=(data.meetings||[]).filter(x=>x.status==='Concluído').length; return <><section className="hero"><div><p className="eyebrow">Dashboard Executivo</p><h2>Indicadores principais</h2><p>Resumo limpo para diretoria e reunião comercial. A edição detalhada fica nas abas operacionais e na planilha.</p></div><div className="miniStats"><span><Activity/> {events} eventos</span><span><AlertTriangle/> {pending} pendências</span><span><CheckCircle2/> {done} concluídas</span></div></section><section className="cards">{(data.indicators||[]).map((c,i)=><article className={c.type==='primary'?'card primary':'card'} key={c.id||i}><span className="cardIcon"><LineChart size={20}/></span><h3>{c.title}</h3><strong>{c.value}</strong><p>{c.source}</p><small>{c.target}{c.trend?` • ${c.trend}`:''}</small></article>)}</section><EditableTable title="Editar indicadores da Home" description="Use esta tabela para ajustes rápidos. Para atualização automática, conecte a planilha em Configurações." rows={data.indicators||[]} columns={['title','value','source','target','trend','type']} onChange={()=>{}} onAdd={()=>{}} onDelete={()=>{}} /></>}
-function Business({page,data}){const areaMap={'dom-bosco':'Dom Bosco','undb':'UNDB','pos':'Pós','medicina':'Medicina'}; const area=areaMap[page]; const links=(data.powerbi||[]).filter(x=>(x.area||'').toLowerCase().includes(area.toLowerCase()) || (page==='medicina'&&(x.area||'').toLowerCase().includes('medicina'))); return <><section className="hero"><div><p className="eyebrow">{area}</p><h2>Painel comercial</h2><p>Área executiva com links estratégicos e recortes operacionais.</p></div></section><section className="linkGrid">{links.length?links.map(l=><a className="powerLink" href={l.url} target="_blank" key={l.id}><ExternalLink/>{l.name}</a>):<p className="empty">Cadastre links em Configurações.</p>}</section><section className="cards small"><article className="card"><h3>Ações no calendário</h3><strong>{(data.calendar||[]).filter(x=>(x.business||'').toLowerCase().includes(area.toLowerCase())).length}</strong><p>Itens vinculados ao negócio.</p></article><article className="card"><h3>Eventos</h3><strong>{(data.events||[]).filter(x=>(x.business||'').toLowerCase().includes(area.toLowerCase())).length}</strong><p>Eventos cadastrados.</p></article><article className="card"><h3>Pendências</h3><strong>{(data.meetings||[]).filter(x=>x.status!=='Concluído').length}</strong><p>Demandas abertas da reunião.</p></article></section></>}
-function Admin({data,updateRow,addRow,delRow,syncSheets,setData}){return <><section className="hero adminHero"><div><p className="eyebrow">Administração</p><h2>Configurações e integrações</h2><p>Cadastre links CSV publicados da planilha e links Power BI.</p></div><div className="topActions"><button className="primary" onClick={syncSheets}>Sincronizar CSVs</button><button className="ghost" onClick={()=>{if(confirm('Restaurar dados iniciais?')) setData(resetData())}}>Restaurar base</button></div></section><EditableTable title="Links Power BI" description="Botões exibidos nas páginas de negócio." rows={data.powerbi||[]} columns={tableConfig.powerbi} onChange={(i,k,v)=>updateRow('powerbi',i,k,v)} onAdd={()=>addRow('powerbi')} onDelete={(i)=>delRow('powerbi',i)}/><EditableTable title="Planilhas CSV" description="Publique cada aba da planilha como CSV e cole o link aqui." rows={data.sheetConfig||[]} columns={tableConfig.sheetConfig} onChange={(i,k,v)=>updateRow('sheetConfig',i,k,v)} onAdd={()=>addRow('sheetConfig')} onDelete={(i)=>delRow('sheetConfig',i)}/></>}
-createRoot(document.getElementById('root')).render(<App/>);
+
+const businessMap = {
+  'dom-bosco': 'Dom Bosco Exponencial',
+  undb: 'UNDB Graduação',
+  pos: 'Pós-Graduação',
+  medicina: 'Medicina',
+  policlinica: 'Policlínica UNDB'
+};
+
+function makeRow(cols, overrides = {}) {
+  const base = Object.fromEntries(cols.map((c) => {
+    if (c === 'status') return [c, 'Planejado'];
+    if (c === 'priority') return [c, 'Média'];
+    if (c === 'cost' || c === 'totalLeads' || c === 'leads' || c === 'leadsDB' || c === 'leadsUNDB' || c === 'leadsPos') return [c, '0'];
+    if (c === 'period' || c === 'month') return [c, 'Julho'];
+    return [c, ''];
+  }));
+  return { id: crypto.randomUUID(), ...base, ...overrides };
+}
+
+function includesBusiness(value = '', business = '') {
+  const v = String(value).toLowerCase();
+  const b = String(business).toLowerCase();
+  if (!b) return false;
+  if (v.includes(b)) return true;
+  if (business === 'Dom Bosco Exponencial' && v.includes('dom bosco')) return true;
+  if (business === 'UNDB Graduação' && (v.includes('undb') || v.includes('graduação'))) return true;
+  if (business === 'Pós-Graduação' && (v.includes('pós') || v.includes('pos'))) return true;
+  if (business === 'Policlínica UNDB' && v.includes('policlínica')) return true;
+  return false;
+}
+
+function App() {
+  const [page, setPage] = useState(location.hash?.replace('#', '') || 'home');
+  const [data, setData] = useState(loadData());
+  const [toast, setToast] = useState('');
+
+  function showToast(message) {
+    setToast(message);
+    setTimeout(() => setToast(''), 2500);
+  }
+
+  function commit() {
+    saveData(data);
+    showToast('Alterações salvas neste navegador.');
+  }
+
+  function updateRow(section, idx, key, value) {
+    setData((d) => {
+      const rows = [...(d[section] || [])];
+      rows[idx] = { ...rows[idx], [key]: value };
+      return { ...d, [section]: rows };
+    });
+  }
+
+  function addRow(section, cols, overrides = {}) {
+    setData((d) => ({ ...d, [section]: [...(d[section] || []), makeRow(cols, overrides)] }));
+  }
+
+  function deleteRow(section, idx) {
+    setData((d) => ({ ...d, [section]: (d[section] || []).filter((_, i) => i !== idx) }));
+  }
+
+  async function syncSheets() {
+    let next = { ...data };
+    for (const cfg of data.sheetConfig || []) {
+      if (!cfg.csvUrl) continue;
+      try {
+        next[cfg.key] = await fetchCSV(cfg.csvUrl);
+      } catch (e) {
+        alert(`Erro ao sincronizar ${cfg.label}`);
+      }
+    }
+    setData(next);
+    showToast('Sincronização concluída. Clique em Salvar alterações.');
+  }
+
+  const [title, subtitle] = pageInfo[page] || pageInfo.home;
+
+  return (
+    <div className="app">
+      <Sidebar page={page} setPage={(p) => { setPage(p); location.hash = p; }} />
+      <main>
+        <Header title={title} subtitle={subtitle} data={data} setData={setData} onSave={commit} />
+        {toast && <div className="toast"><Save size={16} />{toast}</div>}
+        <Page
+          page={page}
+          data={data}
+          updateRow={updateRow}
+          addRow={addRow}
+          deleteRow={deleteRow}
+          syncSheets={syncSheets}
+          setData={setData}
+        />
+      </main>
+    </div>
+  );
+}
+
+function Page(props) {
+  const { page, data, updateRow, addRow, deleteRow } = props;
+
+  if (page === 'home') return <Home data={data} />;
+  if (page === 'admin') return <Admin {...props} />;
+  if (['dom-bosco', 'undb', 'pos', 'medicina', 'policlinica'].includes(page)) return <Business page={page} {...props} />;
+
+  if (page === 'calendar') {
+    return <EditableTable title="Calendário Comercial 2026" description="Inclui data da ação, gasto, total de leads e leads por unidade." rows={data.calendar || []} columns={columns.calendar} onChange={(i, k, v) => updateRow('calendar', i, k, v)} onAdd={() => addRow('calendar', columns.calendar)} onDelete={(i) => deleteRow('calendar', i)} />;
+  }
+
+  if (page === 'calendar-2027') {
+    return <EditableTable title="Calendário Comercial 2027" description="Espaço para planejamento das ações de 2027." rows={data.calendar2027 || []} columns={columns.calendar2027} onChange={(i, k, v) => updateRow('calendar2027', i, k, v)} onAdd={() => addRow('calendar2027', columns.calendar2027, { period: 'Janeiro' })} onDelete={(i) => deleteRow('calendar2027', i)} />;
+  }
+
+  if (page === 'internal') return <InternalActions {...props} />;
+  if (page === 'events') return <Events {...props} />;
+
+  const map = { external: 'externalActions', meetings: 'meetings' };
+  const section = map[page];
+  const title = pageInfo[page][0];
+  const cols = columns[section];
+
+  return <EditableTable title={title} description="Todos os campos abaixo são editáveis. O status é selecionável." rows={data[section] || []} columns={cols} onChange={(i, k, v) => updateRow(section, i, k, v)} onAdd={() => addRow(section, cols)} onDelete={(i) => deleteRow(section, i)} />;
+}
+
+function Home({ data }) {
+  const pending = (data.meetings || []).filter((x) => x.status !== 'Concluído').length;
+  const events = (data.events || []).length;
+  const done = (data.meetings || []).filter((x) => x.status === 'Concluído').length;
+
+  return (
+    <>
+      <section className="hero">
+        <div>
+          <p className="eyebrow">Dashboard Executivo</p>
+          <h2>Indicadores principais</h2>
+          <p>Resumo limpo para diretoria e reunião comercial. A edição detalhada fica nas abas operacionais e na planilha.</p>
+        </div>
+        <div className="miniStats">
+          <span><Activity /> {events} eventos</span>
+          <span><AlertTriangle /> {pending} pendências</span>
+          <span><CheckCircle2 /> {done} concluídas</span>
+        </div>
+      </section>
+      <section className="cards">
+        {(data.indicators || []).map((c, i) => (
+          <article className={c.type === 'Destaque' || c.type === 'primary' ? 'card primary' : 'card'} key={c.id || i}>
+            <span className="cardIcon"><LineChart size={20} /></span>
+            <h3>{c.title}</h3>
+            <strong>{c.value}</strong>
+            <p>{c.source}</p>
+            <small>{c.target}{c.trend ? ` • ${c.trend}` : ''}</small>
+          </article>
+        ))}
+      </section>
+    </>
+  );
+}
+
+function InternalActions({ data, updateRow, addRow, deleteRow }) {
+  return (
+    <>
+      <EditableTable title="Ações Internas" description="Acompanhamento das ações internas do Grupo Dom Bosco." rows={data.internalActions || []} columns={columns.internalActions} onChange={(i, k, v) => updateRow('internalActions', i, k, v)} onAdd={() => addRow('internalActions', columns.internalActions)} onDelete={(i) => deleteRow('internalActions', i)} />
+      <EditableTable title="Agendamento de visitas às escolas" description="Controle de escolas, responsáveis, contatos e status das visitas." rows={data.schoolVisits || []} columns={columns.schoolVisits} onChange={(i, k, v) => updateRow('schoolVisits', i, k, v)} onAdd={() => addRow('schoolVisits', columns.schoolVisits)} onDelete={(i) => deleteRow('schoolVisits', i)} />
+    </>
+  );
+}
+
+function Events({ data, updateRow, addRow, deleteRow }) {
+  return <EditableTable title="Eventos por mês" description="Preencha mês, data, evento, negócio, responsável, status, custo, total de leads e observações." rows={data.events || []} columns={columns.events} onChange={(i, k, v) => updateRow('events', i, k, v)} onAdd={() => addRow('events', columns.events)} onDelete={(i) => deleteRow('events', i)} />;
+}
+
+function FilteredEditableTable({ title, description, section, rows, columns: cols, filter, defaults, updateRow, addRow, deleteRow }) {
+  const indexedRows = (rows || []).map((row, index) => ({ row, index })).filter(({ row }) => filter(row));
+  return (
+    <EditableTable
+      title={title}
+      description={description}
+      rows={indexedRows.map(({ row }) => row)}
+      columns={cols}
+      onChange={(visibleIndex, key, value) => updateRow(section, indexedRows[visibleIndex].index, key, value)}
+      onAdd={() => addRow(section, cols, defaults)}
+      onDelete={(visibleIndex) => deleteRow(section, indexedRows[visibleIndex].index)}
+    />
+  );
+}
+
+function Business(props) {
+  const { page, data, updateRow, addRow, deleteRow } = props;
+  const business = businessMap[page];
+  const label = page === 'policlinica' ? 'Policlínica' : business.replace(' Exponencial', '').replace('-Graduação', '');
+  const links = (data.powerbi || []).filter((x) => includesBusiness(x.area, business) || (page === 'medicina' && includesBusiness(x.area, 'Medicina')));
+  const businessEventsRows = data.businessEvents || [];
+  const businessDemandsRows = data.businessDemands || [];
+
+  return (
+    <>
+      <section className="hero">
+        <div>
+          <p className="eyebrow">{label}</p>
+          <h2>Painel comercial</h2>
+          <p>Área executiva com demandas, responsáveis, próximas ações, prazos e eventos do negócio.</p>
+        </div>
+      </section>
+
+      <section className="linkGrid">
+        {links.length ? links.map((l) => <a className="powerLink" href={l.url} target="_blank" key={l.id} rel="noreferrer"><ExternalLink />{l.name}</a>) : <p className="empty">Cadastre links em Configurações.</p>}
+      </section>
+
+      <section className="cards small">
+        <article className="card"><h3>Ações no calendário</h3><strong>{(data.calendar || []).filter((x) => includesBusiness(x.business, business)).length}</strong><p>Itens vinculados ao negócio.</p></article>
+        <article className="card"><h3>Eventos</h3><strong>{businessEventsRows.filter((x) => includesBusiness(x.business, business)).length}</strong><p>Eventos cadastrados para este negócio.</p></article>
+        <article className="card"><h3>Pendências</h3><strong>{businessDemandsRows.filter((x) => includesBusiness(x.business, business) && x.status !== 'Concluído').length}</strong><p>Demandas abertas do negócio.</p></article>
+      </section>
+
+      <FilteredEditableTable
+        title="Demandas, responsáveis e próximos passos"
+        description="Use este espaço durante as reuniões comerciais para registrar demanda, responsável, próxima ação e prazo."
+        section="businessDemands"
+        rows={businessDemandsRows}
+        columns={columns.businessDemands}
+        filter={(row) => includesBusiness(row.business, business)}
+        defaults={{ business }}
+        updateRow={updateRow}
+        addRow={addRow}
+        deleteRow={deleteRow}
+      />
+
+      <FilteredEditableTable
+        title="Eventos do negócio"
+        description="Tabela com data, evento, responsável, status, custo, leads captados e observações."
+        section="businessEvents"
+        rows={businessEventsRows}
+        columns={columns.businessEvents}
+        filter={(row) => includesBusiness(row.business, business)}
+        defaults={{ business }}
+        updateRow={updateRow}
+        addRow={addRow}
+        deleteRow={deleteRow}
+      />
+    </>
+  );
+}
+
+function Admin({ data, updateRow, addRow, deleteRow, syncSheets, setData }) {
+  return (
+    <>
+      <section className="hero adminHero">
+        <div>
+          <p className="eyebrow">Administração</p>
+          <h2>Configurações e integrações</h2>
+          <p>Cadastre links CSV publicados da planilha e links Power BI.</p>
+        </div>
+        <div className="topActions">
+          <button className="primary" onClick={syncSheets}>Sincronizar CSVs</button>
+          <button className="ghost" onClick={() => { if (confirm('Restaurar dados iniciais?')) setData(resetData()); }}>Restaurar base</button>
+        </div>
+      </section>
+      <EditableTable title="Links Power BI" description="Botões exibidos nas páginas de negócio." rows={data.powerbi || []} columns={columns.powerbi} onChange={(i, k, v) => updateRow('powerbi', i, k, v)} onAdd={() => addRow('powerbi', columns.powerbi)} onDelete={(i) => deleteRow('powerbi', i)} />
+      <EditableTable title="Planilhas CSV" description="Publique cada aba da planilha como CSV e cole o link aqui." rows={data.sheetConfig || []} columns={columns.sheetConfig} onChange={(i, k, v) => updateRow('sheetConfig', i, k, v)} onAdd={() => addRow('sheetConfig', columns.sheetConfig)} onDelete={(i) => deleteRow('sheetConfig', i)} />
+    </>
+  );
+}
+
+createRoot(document.getElementById('root')).render(<App />);
