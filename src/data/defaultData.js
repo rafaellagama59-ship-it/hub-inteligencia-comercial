@@ -65,7 +65,8 @@ export const defaultData = {
     { id: crypto.randomUUID(), key: 'events', label: 'Eventos por mês', csvUrl: '' },
     { id: crypto.randomUUID(), key: 'businessDemands', label: 'Demandas por Negócio', csvUrl: '' },
     { id: crypto.randomUUID(), key: 'businessEvents', label: 'Eventos por Negócio', csvUrl: '' },
-    { id: crypto.randomUUID(), key: 'meetings', label: 'Reunião Comercial', csvUrl: '' }
+    { id: crypto.randomUUID(), key: 'meetings', label: 'Reunião Comercial', csvUrl: '' },
+    { id: crypto.randomUUID(), key: 'powerbi', label: 'Links Power BI', csvUrl: '' }
   ]
 };
 

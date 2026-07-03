@@ -105,8 +105,10 @@ function App() {
     for (const cfg of data.sheetConfig || []) {
       if (!cfg.csvUrl) continue;
       try {
-        next[cfg.key] = await fetchCSV(cfg.csvUrl);
+        const sectionKey = cfg.key === 'powerbiLinks' ? 'powerbi' : cfg.key;
+        next[sectionKey] = await fetchCSV(cfg.csvUrl, sectionKey);
       } catch (e) {
+        console.error(e);
         alert(`Erro ao sincronizar ${cfg.label}`);
       }
     }
@@ -221,6 +223,44 @@ function buildStrategicReading(data) {
   };
 }
 
+
+function findDashboardForIndicator(card, dashboards = []) {
+  const title = String(card.title || '').toLowerCase();
+  const source = String(card.source || '').toLowerCase();
+  const text = `${title} ${source}`;
+  const list = dashboards || [];
+
+  if (text.includes('dom bosco')) return list.find((d) => includesBusiness(d.area, 'Dom Bosco'));
+  if (text.includes('medicina') || text.includes('vestibular') || text.includes('enem') || text.includes('transfer')) return list.find((d) => includesBusiness(d.area, 'Medicina'));
+  if (text.includes('call center')) return list.find((d) => includesBusiness(d.area, 'Call Center'));
+  if (text.includes('undb')) return list.find((d) => includesBusiness(d.area, 'UNDB Graduação') || includesBusiness(d.area, 'UNDB'));
+  return null;
+}
+
+function DashboardLinks({ links = [] }) {
+  const validLinks = (links || []).filter((item) => item.url && item.name);
+  if (!validLinks.length) return null;
+
+  return (
+    <section className="dashboardQuickLinks">
+      <div>
+        <span>Dashboards em tempo real</span>
+        <h2>Acompanhamento público dos painéis</h2>
+        <p>Clique em um dashboard para abrir o Power BI público e acompanhar os números atualizados.</p>
+      </div>
+      <div className="dashboardQuickGrid">
+        {validLinks.map((link) => (
+          <a href={link.url} target="_blank" rel="noreferrer" key={link.id || link.url}>
+            <ExternalLink size={18} />
+            <strong>{link.name}</strong>
+            <small>{link.area}</small>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Home({ data }) {
   const reading = buildStrategicReading(data);
 
@@ -251,16 +291,21 @@ function Home({ data }) {
           </article>
         </div>
       </section>
+      <DashboardLinks links={data.powerbi || []} />
       <section className="cards">
-        {(data.indicators || []).map((c, i) => (
-          <article className={c.type === 'Destaque' || c.type === 'primary' ? 'card primary' : 'card'} key={c.id || i}>
-            <span className="cardIcon"><LineChart size={20} /></span>
-            <h3>{c.title}</h3>
-            <strong>{c.value}</strong>
-            <p>{c.source}</p>
-            <small>{c.target}{c.trend ? ` • ${c.trend}` : ''}</small>
-          </article>
-        ))}
+        {(data.indicators || []).map((c, i) => {
+          const dash = findDashboardForIndicator(c, data.powerbi || []);
+          return (
+            <article className={c.type === 'Destaque' || c.type === 'primary' ? 'card primary' : 'card'} key={c.id || i}>
+              <span className="cardIcon"><LineChart size={20} /></span>
+              <h3>{c.title || 'Indicador'}</h3>
+              <strong>{c.value || '--'}</strong>
+              <p>{c.source}</p>
+              <small>{c.target}{c.trend ? ` • ${c.trend}` : ''}</small>
+              {dash?.url && <a className="cardDashLink" href={dash.url} target="_blank" rel="noreferrer">Abrir dashboard</a>}
+            </article>
+          );
+        })}
       </section>
     </>
   );

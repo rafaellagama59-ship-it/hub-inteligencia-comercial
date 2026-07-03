@@ -280,3 +280,61 @@ td textarea {
   .readingMain { border-right: 0; border-bottom: 1px solid var(--line); padding-right: 0; padding-bottom: 16px; }
   .readingGrid { grid-template-columns: 1fr; }
 }
+
+.dashboardQuickLinks {
+  background: rgba(255,255,255,.96);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 22px 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: minmax(280px, .85fr) 1.6fr;
+  gap: 22px;
+  align-items: center;
+}
+.dashboardQuickLinks span {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 900;
+  color: #536b99;
+  font-size: 12px;
+  margin-bottom: 7px;
+}
+.dashboardQuickLinks h2 { margin: 0 0 8px; font-size: 24px; letter-spacing: -.4px; }
+.dashboardQuickLinks p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.45; }
+.dashboardQuickGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.dashboardQuickGrid a {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  grid-template-areas: "icon title" "icon area";
+  gap: 3px 10px;
+  background: #f7fbff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px;
+  color: var(--blue);
+  text-decoration: none;
+  transition: .18s ease;
+}
+.dashboardQuickGrid a:hover { transform: translateY(-1px); border-color: #8bb4ed; background: white; }
+.dashboardQuickGrid svg { grid-area: icon; margin-top: 2px; }
+.dashboardQuickGrid strong { grid-area: title; font-size: 14px; line-height: 1.2; }
+.dashboardQuickGrid small { grid-area: area; color: var(--muted); }
+.cardDashLink {
+  display: inline-flex;
+  margin-top: 14px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  background: rgba(255,255,255,.16);
+  color: inherit;
+  font-weight: 900;
+  font-size: 12px;
+  border: 1px solid rgba(255,255,255,.28);
+}
+.card:not(.primary) .cardDashLink { background: #edf5ff; color: var(--blue); border-color: var(--line); }
+@media(max-width: 980px) {
+  .dashboardQuickLinks { grid-template-columns: 1fr; }
+}
