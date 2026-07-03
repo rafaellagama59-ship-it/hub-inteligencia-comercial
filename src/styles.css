@@ -342,3 +342,36 @@ td textarea {
 button:disabled { opacity: .65; cursor: not-allowed; }
 
 .col-location { min-width: 190px; width: 190px; }
+
+.ferias-panel {
+  margin: 24px 0;
+}
+
+.ferias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.ferias-card {
+  background: #ffffff;
+  border: 1px solid #d7e4f5;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 14px 30px rgba(5, 32, 77, 0.08);
+}
+
+.ferias-card span {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  color: #52709b;
+  margin-bottom: 10px;
+}
+
+.ferias-card strong {
+  display: block;
+  font-size: 34px;
+  color: #002b61;
+}
