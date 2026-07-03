@@ -18,6 +18,7 @@ const columns = {
   events: ['month', 'date', 'event', 'business', 'owner', 'status', 'cost', 'totalLeads', 'notes'],
   businessDemands: ['business', 'demand', 'owner', 'nextAction', 'deadline', 'status', 'notes'],
   businessEvents: ['date', 'event', 'owner', 'status', 'cost', 'leads', 'notes'],
+  domBoscoFerias: ['program', 'inscritos', 'pagantes', 'vouchers', 'pacoteMensal', 'pacoteQuinzenal', 'pacoteSemanal', 'pacoteDiaria', 'notes'],
   meetings: ['date', 'block', 'owner', 'task', 'deadline', 'status', 'notes'],
   powerbi: ['area', 'name', 'url'],
   sheetConfig: ['key', 'label', 'csvUrl']
@@ -51,7 +52,7 @@ function makeRow(cols, overrides = {}) {
   const base = Object.fromEntries(cols.map((c) => {
     if (c === 'status') return [c, 'Planejado'];
     if (c === 'priority') return [c, 'Média'];
-    if (c === 'cost' || c === 'totalLeads' || c === 'leads' || c === 'leadGoal' || c === 'capturedLeads' || c === 'leadsDB' || c === 'leadsUNDB' || c === 'leadsPos') return [c, '0'];
+    if (['cost', 'totalLeads', 'leads', 'leadGoal', 'capturedLeads', 'leadsDB', 'leadsUNDB', 'leadsPos', 'inscritos', 'pagantes', 'vouchers', 'pacoteMensal', 'pacoteQuinzenal', 'pacoteSemanal', 'pacoteDiaria'].includes(c)) return [c, '0'];
     if (c === 'period' || c === 'month') return [c, 'Julho'];
     return [c, ''];
   }));
@@ -372,6 +373,44 @@ function FilteredEditableTable({ title, description, section, rows, columns: col
   );
 }
 
+
+function DomBoscoFerias({ data, updateRow, addRow, deleteRow }) {
+  const rows = data.domBoscoFerias || [];
+  const item = rows[0] || {};
+
+  return (
+    <>
+      <section className="panel feriasPanel">
+        <div className="panelHead">
+          <div>
+            <h2>Férias em Movimento</h2>
+            <p>Resumo comercial de inscritos, pagantes, vouchers e pacotes vendidos.</p>
+          </div>
+        </div>
+        <section className="cards small feriasCards">
+          <article className="card"><h3>Inscritos</h3><strong>{item.inscritos || '0'}</strong><p>Total de inscrições registradas.</p></article>
+          <article className="card"><h3>Pagantes</h3><strong>{item.pagantes || '0'}</strong><p>Inscrições pagas confirmadas.</p></article>
+          <article className="card"><h3>Vouchers</h3><strong>{item.vouchers || '0'}</strong><p>Inscrições via voucher.</p></article>
+          <article className="card"><h3>Mensal</h3><strong>{item.pacoteMensal || '0'}</strong><p>Pacotes mensais.</p></article>
+          <article className="card"><h3>Quinzenal</h3><strong>{item.pacoteQuinzenal || '0'}</strong><p>Pacotes quinzenais.</p></article>
+          <article className="card"><h3>Semanal</h3><strong>{item.pacoteSemanal || '0'}</strong><p>Pacotes semanais.</p></article>
+          <article className="card"><h3>Diária</h3><strong>{item.pacoteDiaria || '0'}</strong><p>Pacotes de diária.</p></article>
+        </section>
+      </section>
+
+      <EditableTable
+        title="Férias em Movimento — base editável"
+        description="Atualize os números pela planilha ou edite manualmente quando necessário."
+        rows={rows}
+        columns={columns.domBoscoFerias}
+        onChange={(i, k, v) => updateRow('domBoscoFerias', i, k, v)}
+        onAdd={() => addRow('domBoscoFerias', columns.domBoscoFerias, { program: 'Férias em Movimento' })}
+        onDelete={(i) => deleteRow('domBoscoFerias', i)}
+      />
+    </>
+  );
+}
+
 function Business(props) {
   const { page, data, updateRow, addRow, deleteRow } = props;
   const business = businessMap[page];
@@ -399,6 +438,10 @@ function Business(props) {
         <article className="card"><h3>Eventos</h3><strong>{businessEventsRows.filter((x) => includesBusiness(x.business, business)).length}</strong><p>Eventos cadastrados para este negócio.</p></article>
         <article className="card"><h3>Pendências</h3><strong>{businessDemandsRows.filter((x) => includesBusiness(x.business, business) && x.status !== 'Concluído').length}</strong><p>Demandas abertas do negócio.</p></article>
       </section>
+
+      {page === 'dom-bosco' && (
+        <DomBoscoFerias data={data} updateRow={updateRow} addRow={addRow} deleteRow={deleteRow} />
+      )}
 
       <FilteredEditableTable
         title="Demandas, responsáveis e próximos passos"

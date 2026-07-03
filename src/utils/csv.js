@@ -89,6 +89,20 @@ const headerAliases = {
   achievementrate: 'achievementRate',
   porcentageatingimento: 'achievementRate',
   percentualdeatingimento: 'achievementRate'
+  programa: 'program',
+  program: 'program',
+  inscritos: 'inscritos',
+  pagantes: 'pagantes',
+  voucher: 'vouchers',
+  vouchers: 'vouchers',
+  pacotemensal: 'pacoteMensal',
+  mensal: 'pacoteMensal',
+  pacotequinzenal: 'pacoteQuinzenal',
+  quinzenal: 'pacoteQuinzenal',
+  pacotesemanal: 'pacoteSemanal',
+  semanal: 'pacoteSemanal',
+  pacotediaria: 'pacoteDiaria',
+  diaria: 'pacoteDiaria',
 };
 
 function normalizeHeader(header) {

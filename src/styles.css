@@ -342,3 +342,13 @@ td textarea {
 button:disabled { opacity: .65; cursor: not-allowed; }
 
 .col-location { min-width: 190px; width: 190px; }
+
+
+.feriasPanel {
+  margin-bottom: 24px;
+}
+
+.feriasCards {
+  margin-top: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
