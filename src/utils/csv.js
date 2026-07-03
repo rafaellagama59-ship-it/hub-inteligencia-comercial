@@ -152,7 +152,17 @@ export function normalizeCSVRows(section, rows) {
 }
 
 export async function fetchCSV(url, section = '') {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('Erro ao buscar CSV');
-  return normalizeCSVRows(section, parseCSV(await res.text()));
+  const cleanUrl = String(url || '').trim();
+  const separator = cleanUrl.includes('?') ? '&' : '?';
+  const cacheBustedUrl = `${cleanUrl}${separator}_=${Date.now()}`;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+
+  try {
+    const res = await fetch(cacheBustedUrl, { cache: 'no-store', signal: controller.signal });
+    if (!res.ok) throw new Error(`Erro ao buscar CSV: ${res.status}`);
+    return normalizeCSVRows(section, parseCSV(await res.text()));
+  } finally {
+    clearTimeout(timeout);
+  }
 }

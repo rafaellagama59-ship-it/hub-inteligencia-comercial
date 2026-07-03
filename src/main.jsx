@@ -73,6 +73,7 @@ function App() {
   const [page, setPage] = useState(location.hash?.replace('#', '') || 'home');
   const [data, setData] = useState(loadData());
   const [toast, setToast] = useState('');
+  const [syncing, setSyncing] = useState(false);
 
   function showToast(message) {
     setToast(message);
@@ -101,19 +102,49 @@ function App() {
   }
 
   async function syncSheets() {
-    let next = { ...data };
-    for (const cfg of data.sheetConfig || []) {
-      if (!cfg.csvUrl) continue;
-      try {
-        const sectionKey = cfg.key === 'powerbiLinks' ? 'powerbi' : cfg.key;
-        next[sectionKey] = await fetchCSV(cfg.csvUrl, sectionKey);
-      } catch (e) {
-        console.error(e);
-        alert(`Erro ao sincronizar ${cfg.label}`);
-      }
+    if (syncing) return;
+    const configs = (data.sheetConfig || []).filter((cfg) => String(cfg.csvUrl || '').trim());
+
+    if (!configs.length) {
+      showToast('Nenhum link CSV configurado.');
+      return;
     }
+
+    setSyncing(true);
+    showToast(`Sincronizando ${configs.length} abas...`);
+
+    const results = await Promise.allSettled(
+      configs.map(async (cfg) => {
+        const sectionKey = cfg.key === 'powerbiLinks' ? 'powerbi' : cfg.key;
+        const rows = await fetchCSV(cfg.csvUrl, sectionKey);
+        return { cfg, sectionKey, rows };
+      })
+    );
+
+    const next = { ...data };
+    const failed = [];
+    let success = 0;
+
+    results.forEach((result) => {
+      if (result.status === 'fulfilled') {
+        next[result.value.sectionKey] = result.value.rows;
+        success += 1;
+      } else {
+        console.error(result.reason);
+        failed.push(result.reason?.message || 'Erro desconhecido');
+      }
+    });
+
     setData(next);
-    showToast('Sincronização concluída. Clique em Salvar alterações.');
+    setSyncing(false);
+
+    if (failed.length) {
+      showToast(`Sincronização parcial: ${success}/${configs.length} abas. Confira links com erro.`);
+      alert(`Algumas abas não sincronizaram (${failed.length}). Confira se os links CSV estão publicados corretamente.`);
+      return;
+    }
+
+    showToast(`Sincronização concluída: ${success}/${configs.length} abas. Clique em Salvar alterações.`);
   }
 
   const [title, subtitle] = pageInfo[page] || pageInfo.home;
@@ -131,6 +162,7 @@ function App() {
           addRow={addRow}
           deleteRow={deleteRow}
           syncSheets={syncSheets}
+          syncing={syncing}
           setData={setData}
         />
       </main>
@@ -396,7 +428,7 @@ function Business(props) {
   );
 }
 
-function Admin({ data, updateRow, addRow, deleteRow, syncSheets, setData }) {
+function Admin({ data, updateRow, addRow, deleteRow, syncSheets, syncing, setData }) {
   return (
     <>
       <section className="hero adminHero">
@@ -406,7 +438,7 @@ function Admin({ data, updateRow, addRow, deleteRow, syncSheets, setData }) {
           <p>Cadastre links CSV publicados da planilha e links Power BI.</p>
         </div>
         <div className="topActions">
-          <button className="primary" onClick={syncSheets}>Sincronizar CSVs</button>
+          <button className="primary" onClick={syncSheets} disabled={syncing}>{syncing ? 'Sincronizando...' : 'Sincronizar CSVs'}</button>
           <button className="ghost" onClick={() => { if (confirm('Restaurar dados iniciais?')) setData(resetData()); }}>Restaurar base</button>
         </div>
       </section>

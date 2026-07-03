@@ -338,3 +338,5 @@ td textarea {
 @media(max-width: 980px) {
   .dashboardQuickLinks { grid-template-columns: 1fr; }
 }
+
+button:disabled { opacity: .65; cursor: not-allowed; }

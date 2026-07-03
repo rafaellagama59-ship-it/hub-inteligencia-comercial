@@ -53,7 +53,7 @@ export const defaultData = {
   powerbi: [
     { id: crypto.randomUUID(), area: 'Medicina', name: 'Dashboard Medicina', url: 'https://app.powerbi.com/view?r=eyJrIjoiNzI4ZWZmNmUtMjAxNS00NWVlLThhM2UtNTM1YjM1MTdjYmI1IiwidCI6ImZkOThjZTUxLTQ5ZmMtNDMyZS1hZGU3LTY0ZGQ3MWQzNGVjZSJ9' },
     { id: crypto.randomUUID(), area: 'Dom Bosco', name: 'Dashboard Dom Bosco', url: 'https://app.powerbi.com/view?r=eyJrIjoiN2U2MDAwNDQtY2EwOS00YTRjLWJjMzAtYWIxODVlMzJjMTMyIiwidCI6ImZkOThjZTUxLTQ5ZmMtNDMyZS1hZGU3LTY0ZGQ3MWQzNGVjZSJ9' },
-    { id: crypto.randomUUID(), area: 'Call Center', name: 'Ranking de Matrículas Call Center', url: 'https://app.powerbi.com/view?r=eyJrIjoiYmNlMzY0ZGYtMDNmNS00ZDg3LTlhN2UtMGI2OTc0NTZmNDdiIiwidCI6ImZkOThjZTUxLTQ5ZmMtNDMyZS1hZGU3LTY0ZGQ3MWQzNGVjZSJ9' }
+    { id: crypto.randomUUID(), area: 'UNDB Graduação', name: 'Dashboard de Matrículas UNDB', url: 'https://app.powerbi.com/view?r=eyJrIjoiYmNlMzY0ZGYtMDNmNS00ZDg3LTlhN2UtMGI2OTc0NTZmNDdiIiwidCI6ImZkOThjZTUxLTQ5ZmMtNDMyZS1hZGU3LTY0ZGQ3MWQzNGVjZSJ9' }
   ],
   sheetConfig: [
     { id: crypto.randomUUID(), key: 'indicators', label: 'Indicadores da Home', csvUrl: '' },
