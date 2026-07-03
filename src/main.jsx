@@ -14,6 +14,7 @@ const columns = {
   internalActions: ['date', 'title', 'business', 'owner', 'status', 'cost', 'leads', 'notes'],
   schoolVisits: ['date', 'school', 'business', 'owner', 'status', 'contact', 'scheduledTime', 'notes'],
   externalActions: ['date', 'title', 'location', 'business', 'owner', 'status', 'cost', 'leadGoal', 'capturedLeads', 'achievementRate', 'totalLeads'],
+  external: ['date', 'title', 'location', 'business', 'owner', 'status', 'cost', 'leadGoal', 'capturedLeads', 'achievementRate', 'totalLeads'],
   events: ['month', 'date', 'event', 'business', 'owner', 'status', 'cost', 'totalLeads', 'notes'],
   businessDemands: ['business', 'demand', 'owner', 'nextAction', 'deadline', 'status', 'notes'],
   businessEvents: ['date', 'event', 'owner', 'status', 'cost', 'leads', 'notes'],
