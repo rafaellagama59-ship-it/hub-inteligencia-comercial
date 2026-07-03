@@ -50,9 +50,6 @@ export const defaultData = {
     { id: crypto.randomUUID(), date: '06/07/2026', block: 'UNDB e Medicina', owner: 'Allyson', task: 'Validar status dos processos seletivos', deadline: '10/07/2026', status: 'Pendente', notes: '' },
     { id: crypto.randomUUID(), date: '06/07/2026', block: 'Ações - Marketing', owner: 'Marketing', task: 'Atualizar ações internas e externas', deadline: '10/07/2026', status: 'Pendente', notes: '' }
   ],
-  domBoscoFerias: [
-    { id: crypto.randomUUID(), program: 'Férias em Movimento', inscritos: '0', pagantes: '0', vouchers: '0', pacoteMensal: '0', pacoteQuinzenal: '0', pacoteSemanal: '0', pacoteDiaria: '0', notes: 'Acompanhamento comercial dos inscritos, pagantes, vouchers e pacotes vendidos.' }
-  ],
   powerbi: [
     { id: crypto.randomUUID(), area: 'Medicina', name: 'Dashboard Medicina', url: 'https://app.powerbi.com/view?r=eyJrIjoiNzI4ZWZmNmUtMjAxNS00NWVlLThhM2UtNTM1YjM1MTdjYmI1IiwidCI6ImZkOThjZTUxLTQ5ZmMtNDMyZS1hZGU3LTY0ZGQ3MWQzNGVjZSJ9' },
     { id: crypto.randomUUID(), area: 'Dom Bosco', name: 'Dashboard Dom Bosco', url: 'https://app.powerbi.com/view?r=eyJrIjoiN2U2MDAwNDQtY2EwOS00YTRjLWJjMzAtYWIxODVlMzJjMTMyIiwidCI6ImZkOThjZTUxLTQ5ZmMtNDMyZS1hZGU3LTY0ZGQ3MWQzNGVjZSJ9' },
@@ -68,7 +65,6 @@ export const defaultData = {
     { id: crypto.randomUUID(), key: 'events', label: 'Eventos por mês', csvUrl: '' },
     { id: crypto.randomUUID(), key: 'businessDemands', label: 'Demandas por Negócio', csvUrl: '' },
     { id: crypto.randomUUID(), key: 'businessEvents', label: 'Eventos por Negócio', csvUrl: '' },
-    { id: crypto.randomUUID(), key: 'domBoscoFerias', label: 'Férias em Movimento - Dom Bosco', csvUrl: '' },
     { id: crypto.randomUUID(), key: 'meetings', label: 'Reunião Comercial', csvUrl: '' },
     { id: crypto.randomUUID(), key: 'powerbi', label: 'Links Power BI', csvUrl: '' }
   ]

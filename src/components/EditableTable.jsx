@@ -40,14 +40,6 @@ const labels = {
   school: 'Escola',
   contact: 'Contato',
   scheduledTime: 'Horário'
-  program: 'Programa',
-  inscritos: 'Inscritos',
-  pagantes: 'Pagantes',
-  vouchers: 'Vouchers',
-  pacoteMensal: 'Mensal',
-  pacoteQuinzenal: 'Quinzenal',
-  pacoteSemanal: 'Semanal',
-  pacoteDiaria: 'Diária',
 };
 
 function SelectField({ value, options, onChange }) {
