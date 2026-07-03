@@ -49,7 +49,6 @@ const headerAliases = {
   leadsdb: 'leadsDB',
   leadsundb: 'leadsUNDB',
   leadspos: 'leadsPos',
-  leadscaptados: 'leads',
   leads: 'leads',
   prazo: 'deadline',
   deadline: 'deadline',
@@ -76,7 +75,20 @@ const headerAliases = {
   horario: 'scheduledTime',
   scheduledtime: 'scheduledTime',
   local: 'location',
-  location: 'location'
+  location: 'location',
+  metadeleads: 'leadGoal',
+  metaledeads: 'leadGoal',
+  leadgoal: 'leadGoal',
+  capturedleads: 'capturedLeads',
+  leadcapturado: 'capturedLeads',
+  leadscaptado: 'capturedLeads',
+  leadscaptados: 'capturedLeads',
+  atingimento: 'achievementRate',
+  percentualatingimento: 'achievementRate',
+  atingimentopercentual: 'achievementRate',
+  achievementrate: 'achievementRate',
+  porcentageatingimento: 'achievementRate',
+  percentualdeatingimento: 'achievementRate'
 };
 
 function normalizeHeader(header) {
@@ -139,15 +151,26 @@ function formatPowerBI(row) {
 function formatLeads(row) {
   return {
     ...row,
-    leads: row.leads || row.totalLeads || row.leadsCaptados || '',
-    totalLeads: row.totalLeads || row.leads || ''
+    leads: row.leads || row.totalLeads || row.capturedLeads || '',
+    totalLeads: row.totalLeads || row.leads || row.capturedLeads || ''
+  };
+}
+
+function formatExternalAction(row) {
+  return {
+    ...row,
+    leadGoal: row.leadGoal || row.meta || '',
+    capturedLeads: row.capturedLeads || row.leads || '',
+    achievementRate: row.achievementRate || '',
+    totalLeads: row.totalLeads || row.capturedLeads || row.leads || ''
   };
 }
 
 export function normalizeCSVRows(section, rows) {
   if (section === 'indicators') return rows.map(formatIndicator);
   if (section === 'powerbi' || section === 'powerbiLinks') return rows.map(formatPowerBI).filter((row) => row.url);
-  if (['internalActions', 'externalActions', 'businessEvents'].includes(section)) return rows.map(formatLeads);
+  if (section === 'externalActions') return rows.map(formatExternalAction);
+  if (['internalActions', 'businessEvents'].includes(section)) return rows.map(formatLeads);
   return rows;
 }
 

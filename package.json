@@ -11,12 +11,12 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
-    "lucide-react": "latest",
+    "vite": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "vite": "latest"
+    "lucide-react": "latest"
   },
   "devDependencies": {
-    "gh-pages": "^6.3.0"
+    "gh-pages": "latest"
   }
 }

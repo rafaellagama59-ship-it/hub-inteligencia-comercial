@@ -193,7 +193,7 @@ td textarea {
 .col-period, .col-month { min-width: 150px; width: 150px; }
 .col-status { min-width: 165px; width: 165px; }
 .col-priority { min-width: 145px; width: 145px; }
-.col-cost, .col-leads, .col-totalLeads, .col-leadsDB, .col-leadsUNDB, .col-leadsPos { min-width: 140px; width: 140px; }
+.col-cost, .col-leads, .col-totalLeads, .col-leadsDB, .col-leadsUNDB, .col-leadsPos, .col-leadGoal, .col-capturedLeads, .col-achievementRate { min-width: 140px; width: 140px; }
 .col-title, .col-event, .col-school, .col-name { min-width: 225px; width: 225px; }
 .col-business { min-width: 270px; width: 270px; }
 .col-owner, .col-block, .col-area { min-width: 210px; width: 210px; }
@@ -340,3 +340,5 @@ td textarea {
 }
 
 button:disabled { opacity: .65; cursor: not-allowed; }
+
+.col-location { min-width: 190px; width: 190px; }

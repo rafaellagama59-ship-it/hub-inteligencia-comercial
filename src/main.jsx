@@ -13,7 +13,7 @@ const columns = {
   calendar2027: ['period', 'date', 'title', 'business', 'owner', 'status', 'priority', 'cost', 'totalLeads', 'leadsDB', 'leadsUNDB', 'leadsPos', 'deadline', 'notes'],
   internalActions: ['date', 'title', 'business', 'owner', 'status', 'cost', 'leads', 'notes'],
   schoolVisits: ['date', 'school', 'business', 'owner', 'status', 'contact', 'scheduledTime', 'notes'],
-  externalActions: ['date', 'title', 'business', 'owner', 'status', 'cost', 'leads', 'notes'],
+  externalActions: ['date', 'title', 'location', 'business', 'owner', 'status', 'cost', 'leadGoal', 'capturedLeads', 'achievementRate', 'totalLeads'],
   events: ['month', 'date', 'event', 'business', 'owner', 'status', 'cost', 'totalLeads', 'notes'],
   businessDemands: ['business', 'demand', 'owner', 'nextAction', 'deadline', 'status', 'notes'],
   businessEvents: ['date', 'event', 'owner', 'status', 'cost', 'leads', 'notes'],
@@ -50,7 +50,7 @@ function makeRow(cols, overrides = {}) {
   const base = Object.fromEntries(cols.map((c) => {
     if (c === 'status') return [c, 'Planejado'];
     if (c === 'priority') return [c, 'Média'];
-    if (c === 'cost' || c === 'totalLeads' || c === 'leads' || c === 'leadsDB' || c === 'leadsUNDB' || c === 'leadsPos') return [c, '0'];
+    if (c === 'cost' || c === 'totalLeads' || c === 'leads' || c === 'leadGoal' || c === 'capturedLeads' || c === 'leadsDB' || c === 'leadsUNDB' || c === 'leadsPos') return [c, '0'];
     if (c === 'period' || c === 'month') return [c, 'Julho'];
     return [c, ''];
   }));
