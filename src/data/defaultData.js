@@ -45,6 +45,9 @@ export const defaultData = {
     { id: crypto.randomUUID(), business: 'Pós-Graduação', date: '', event: 'A definir', owner: 'Marketing', status: 'Planejado', cost: '0', leads: '0', notes: 'Cadastrar eventos e ações por curso.' },
     { id: crypto.randomUUID(), business: 'Policlínica UNDB', date: '', event: 'Lançamento Clube de Benefícios', owner: 'Marketing + Comercial', status: 'Planejado', cost: '0', leads: '0', notes: 'Estratégia em construção.' }
   ],
+  domBoscoFerias: [
+    { id: crypto.randomUUID(), program: 'Férias em Movimento', inscritos: '0', pagantes: '0', vouchers: '0', pacoteMensal: '0', pacoteQuinzenal: '0', pacoteSemanal: '0', pacoteDiaria: '0', notes: 'Acompanhamento comercial dos inscritos, pagantes, vouchers e pacotes vendidos.' }
+  ],
   meetings: [
     { id: crypto.randomUUID(), date: '06/07/2026', block: 'Dom Bosco', owner: 'Ilana', task: 'Atualizar pendências da captação', deadline: '10/07/2026', status: 'Pendente', notes: '' },
     { id: crypto.randomUUID(), date: '06/07/2026', block: 'UNDB e Medicina', owner: 'Allyson', task: 'Validar status dos processos seletivos', deadline: '10/07/2026', status: 'Pendente', notes: '' },
@@ -56,17 +59,18 @@ export const defaultData = {
     { id: crypto.randomUUID(), area: 'UNDB Graduação', name: 'Dashboard de Matrículas UNDB', url: 'https://app.powerbi.com/view?r=eyJrIjoiYmNlMzY0ZGYtMDNmNS00ZDg3LTlhN2UtMGI2OTc0NTZmNDdiIiwidCI6ImZkOThjZTUxLTQ5ZmMtNDMyZS1hZGU3LTY0ZGQ3MWQzNGVjZSJ9' }
   ],
   sheetConfig: [
-    { id: crypto.randomUUID(), key: 'indicators', label: 'Indicadores da Home', csvUrl: '' },
-    { id: crypto.randomUUID(), key: 'calendar', label: 'Calendário Comercial 2026', csvUrl: '' },
-    { id: crypto.randomUUID(), key: 'calendar2027', label: 'Calendário Comercial 2027', csvUrl: '' },
-    { id: crypto.randomUUID(), key: 'internalActions', label: 'Ações Internas', csvUrl: '' },
-    { id: crypto.randomUUID(), key: 'schoolVisits', label: 'Agendamento de Visitas às Escolas', csvUrl: '' },
-    { id: crypto.randomUUID(), key: 'externalActions', label: 'Ações Externas', csvUrl: '' },
-    { id: crypto.randomUUID(), key: 'events', label: 'Eventos por mês', csvUrl: '' },
-    { id: crypto.randomUUID(), key: 'businessDemands', label: 'Demandas por Negócio', csvUrl: '' },
-    { id: crypto.randomUUID(), key: 'businessEvents', label: 'Eventos por Negócio', csvUrl: '' },
-    { id: crypto.randomUUID(), key: 'meetings', label: 'Reunião Comercial', csvUrl: '' },
-    { id: crypto.randomUUID(), key: 'powerbi', label: 'Links Power BI', csvUrl: '' }
+    { id: crypto.randomUUID(), key: 'indicators', label: 'Indicadores da Home', csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRdd7WTmB_843PzdzMlbyA3Q4tVZV-RrbcaLnj66bd-GylXnFOjI-zPkxbG7B2VA/pub?gid=664980055&single=true&output=csv' },
+    { id: crypto.randomUUID(), key: 'calendar', label: 'Calendário Comercial 2026', csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRdd7WTmB_843PzdzMlbyA3Q4tVZV-RrbcaLnj66bd-GylXnFOjI-zPkxbG7B2VA/pub?gid=1920524677&single=true&output=csv' },
+    { id: crypto.randomUUID(), key: 'calendar2027', label: 'Calendário Comercial 2027', csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRdd7WTmB_843PzdzMlbyA3Q4tVZV-RrbcaLnj66bd-GylXnFOjI-zPkxbG7B2VA/pub?gid=1276893220&single=true&output=csv' },
+    { id: crypto.randomUUID(), key: 'internalActions', label: 'Ações Internas', csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRdd7WTmB_843PzdzMlbyA3Q4tVZV-RrbcaLnj66bd-GylXnFOjI-zPkxbG7B2VA/pub?gid=231331620&single=true&output=csv' },
+    { id: crypto.randomUUID(), key: 'schoolVisits', label: 'Agendamento de Visitas às Escolas', csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRdd7WTmB_843PzdzMlbyA3Q4tVZV-RrbcaLnj66bd-GylXnFOjI-zPkxbG7B2VA/pub?gid=1578452596&single=true&output=csv' },
+    { id: crypto.randomUUID(), key: 'externalActions', label: 'Ações Externas', csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRdd7WTmB_843PzdzMlbyA3Q4tVZV-RrbcaLnj66bd-GylXnFOjI-zPkxbG7B2VA/pub?gid=225013141&single=true&output=csv' },
+    { id: crypto.randomUUID(), key: 'events', label: 'Eventos por mês', csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRdd7WTmB_843PzdzMlbyA3Q4tVZV-RrbcaLnj66bd-GylXnFOjI-zPkxbG7B2VA/pub?gid=1232679214&single=true&output=csv' },
+    { id: crypto.randomUUID(), key: 'businessDemands', label: 'Demandas por Negócio', csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRdd7WTmB_843PzdzMlbyA3Q4tVZV-RrbcaLnj66bd-GylXnFOjI-zPkxbG7B2VA/pub?gid=620556872&single=true&output=csv' },
+    { id: crypto.randomUUID(), key: 'businessEvents', label: 'Eventos por Negócio', csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRdd7WTmB_843PzdzMlbyA3Q4tVZV-RrbcaLnj66bd-GylXnFOjI-zPkxbG7B2VA/pub?gid=1877299892&single=true&output=csv' },
+    { id: crypto.randomUUID(), key: 'meetings', label: 'Reunião Comercial', csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRdd7WTmB_843PzdzMlbyA3Q4tVZV-RrbcaLnj66bd-GylXnFOjI-zPkxbG7B2VA/pub?gid=212748497&single=true&output=csv' },
+    { id: crypto.randomUUID(), key: 'powerbiLinks', label: 'Links Power BI', csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRdd7WTmB_843PzdzMlbyA3Q4tVZV-RrbcaLnj66bd-GylXnFOjI-zPkxbG7B2VA/pub?gid=448232704&single=true&output=csv' },
+    { id: crypto.randomUUID(), key: 'domBoscoFerias', label: 'Férias em Movimento - Dom Bosco', csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRdd7WTmB_843PzdzMlbyA3Q4tVZV-RrbcaLnj66bd-GylXnFOjI-zPkxbG7B2VA/pub?gid=294001099&single=true&output=csv' }
   ]
 };
 
