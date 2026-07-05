@@ -36,42 +36,6 @@ function upsertFeriasConfig(data = {}) {
   };
 }
 
-function FeriasMovimentoDash({ data }) {
-  const ferias = (data?.domBoscoFerias || [])[0] || {};
-
-  const cards = [
-    ['Inscritos', ferias.inscritos || '0', 'Total de inscrições registradas.'],
-    ['Pagantes', ferias.pagantes || '0', 'Inscrições pagas confirmadas.'],
-    ['Vouchers', ferias.vouchers || '0', 'Inscrições via voucher.'],
-    ['Mensal', ferias.pacoteMensal || '0', 'Pacotes mensais vendidos.'],
-    ['Quinzenal', ferias.pacoteQuinzenal || '0', 'Pacotes quinzenais vendidos.'],
-    ['Semanal', ferias.pacoteSemanal || '0', 'Pacotes semanais vendidos.'],
-    ['Diária', ferias.pacoteDiaria || '0', 'Diárias vendidas.']
-  ];
-
-  return (
-    <section className="panel">
-      <div className="panelHead">
-        <div>
-          <p className="eyebrow">Férias em Movimento</p>
-          <h2>Resumo comercial</h2>
-          <p>Dash de inscritos, pagantes, vouchers e pacotes do Férias em Movimento.</p>
-        </div>
-      </div>
-
-      <section className="cards small">
-        {cards.map(([title, value, description]) => (
-          <article className="card" key={title}>
-            <h3>{title}</h3>
-            <strong>{value}</strong>
-            <p>{description}</p>
-          </article>
-        ))}
-      </section>
-    </section>
-  );
-}
-
 function FeriasConfigPanel({ data, setData }) {
   const hasConfig = (data?.sheetConfig || []).some((item) => item?.key === 'domBoscoFerias');
 
@@ -147,7 +111,6 @@ export default function Header({ title, subtitle, data, setData, onSave }) {
       </header>
 
       {title === 'Configurações' && <FeriasConfigPanel data={data} setData={setData} />}
-      {title === 'Escola Dom Bosco' && <FeriasMovimentoDash data={data} />}
     </>
   );
 }
