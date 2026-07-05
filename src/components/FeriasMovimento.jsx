@@ -12,23 +12,23 @@ export default function FeriasMovimento({ data }) {
   ];
 
   return (
-    <section className="panel ferias-panel">
+    <section className="panel">
       <div className="panelHead">
         <div>
           <span className="eyebrow">Dom Bosco</span>
           <h2>Férias em Movimento</h2>
-          <p>Acompanhamento de inscritos, pagantes, vouchers e pacotes vendidos.</p>
+          <p>Acompanhamento comercial de inscritos, pagantes, vouchers e pacotes vendidos.</p>
         </div>
       </div>
 
-      <div className="ferias-grid">
+      <section className="cards small">
         {cards.map(([title, value]) => (
-          <article className="ferias-card" key={title}>
-            <span>{title}</span>
+          <article className="card" key={title}>
+            <h3>{title}</h3>
             <strong>{value}</strong>
           </article>
         ))}
-      </div>
+      </section>
     </section>
   );
 }

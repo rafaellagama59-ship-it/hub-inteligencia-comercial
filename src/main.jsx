@@ -4,6 +4,7 @@ import { ExternalLink, LineChart, Save } from 'lucide-react';
 import './styles.css';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
+import FeriasMovimento from './components/FeriasMovimento.jsx';
 import EditableTable from './components/EditableTable';
 import { loadData, saveData, resetData } from './utils/storage';
 import { fetchCSV } from './utils/csv';
@@ -399,6 +400,8 @@ function Business(props) {
         <article className="card"><h3>Eventos</h3><strong>{businessEventsRows.filter((x) => includesBusiness(x.business, business)).length}</strong><p>Eventos cadastrados para este negócio.</p></article>
         <article className="card"><h3>Pendências</h3><strong>{businessDemandsRows.filter((x) => includesBusiness(x.business, business) && x.status !== 'Concluído').length}</strong><p>Demandas abertas do negócio.</p></article>
       </section>
+
+      {page === 'dom-bosco' && <FeriasMovimento data={data} />}
 
       <FilteredEditableTable
         title="Demandas, responsáveis e próximos passos"
