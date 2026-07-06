@@ -16,12 +16,13 @@ function upsertFeriasConfig(data = {}) {
             program: 'Férias em Movimento',
             inscritos: '0',
             pagantes: '0',
-            vouchers: '0',
+            cortesia: '0',
             pacoteMensal: '0',
             pacoteQuinzenal: '0',
             pacoteSemanal: '0',
             pacoteDiaria: '0',
-            notes: 'Acompanhamento comercial dos inscritos, pagantes, vouchers e pacotes vendidos.'
+            emBranco: '0',
+            notes: 'Acompanhamento comercial dos inscritos, pagantes, cortesias, pacotes vendidos e cadastros em branco.'
           }
         ],
     sheetConfig: [
@@ -69,7 +70,7 @@ function FeriasConfigPanel({ data, setData }) {
         <article className="card">
           <h3>Descrição</h3>
           <strong style={{ fontSize: 22 }}>Férias em Movimento</strong>
-          <p>Inscritos, pagantes, vouchers e pacotes vendidos.</p>
+          <p>Inscritos, pagantes, cortesias, pacotes vendidos e cadastros em branco.</p>
         </article>
       </section>
     </section>
