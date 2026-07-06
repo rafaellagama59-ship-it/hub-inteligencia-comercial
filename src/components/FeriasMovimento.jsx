@@ -4,11 +4,12 @@ export default function FeriasMovimento({ data }) {
   const cards = [
     ['Inscritos', ferias.inscritos || '0'],
     ['Pagantes', ferias.pagantes || '0'],
-    ['Vouchers', ferias.vouchers || '0'],
+    ['Cortesia', ferias.cortesia || '0'],
     ['Mensal', ferias.pacoteMensal || '0'],
     ['Quinzenal', ferias.pacoteQuinzenal || '0'],
     ['Semanal', ferias.pacoteSemanal || '0'],
-    ['Diária', ferias.pacoteDiaria || '0']
+    ['Diária', ferias.pacoteDiaria || '0'],
+    ['Em branco', ferias.emBranco || '0']
   ];
 
   return (
@@ -17,7 +18,7 @@ export default function FeriasMovimento({ data }) {
         <div>
           <span className="eyebrow">Dom Bosco</span>
           <h2>Férias em Movimento</h2>
-          <p>Acompanhamento comercial de inscritos, pagantes, vouchers e pacotes vendidos.</p>
+          <p>Acompanhamento comercial de inscritos, pagantes, cortesias, pacotes vendidos e cadastros em branco.</p>
         </div>
       </div>
 
