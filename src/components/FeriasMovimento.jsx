@@ -1,3 +1,5 @@
+import NpsFerias from './NpsFerias.jsx';
+
 export default function FeriasMovimento({ data }) {
   const ferias = (data?.domBoscoFerias || [])[0] || {};
 
@@ -13,23 +15,27 @@ export default function FeriasMovimento({ data }) {
   ];
 
   return (
-    <section className="panel">
-      <div className="panelHead">
-        <div>
-          <span className="eyebrow">Dom Bosco</span>
-          <h2>Férias em Movimento</h2>
-          <p>Acompanhamento comercial de inscritos, pagantes, cortesias, pacotes vendidos e cadastros em branco.</p>
+    <>
+      <section className="panel">
+        <div className="panelHead">
+          <div>
+            <span className="eyebrow">Dom Bosco</span>
+            <h2>Férias em Movimento</h2>
+            <p>Acompanhamento comercial de inscritos, pagantes, cortesias, pacotes vendidos e cadastros em branco.</p>
+          </div>
         </div>
-      </div>
 
-      <section className="cards small">
-        {cards.map(([title, value]) => (
-          <article className="card" key={title}>
-            <h3>{title}</h3>
-            <strong>{value}</strong>
-          </article>
-        ))}
+        <section className="cards small">
+          {cards.map(([title, value]) => (
+            <article className="card" key={title}>
+              <h3>{title}</h3>
+              <strong>{value}</strong>
+            </article>
+          ))}
+        </section>
       </section>
-    </section>
+
+      <NpsFerias data={data} />
+    </>
   );
 }
