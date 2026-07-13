@@ -11,7 +11,7 @@ export default function FeriasMovimento({ data }) {
     ['Quinzenal', ferias.pacoteQuinzenal || '0'],
     ['Semanal', ferias.pacoteSemanal || '0'],
     ['Diária', ferias.pacoteDiaria || '0'],
-    ['Em branco', ferias.emBranco || '0']
+    ['Alunos externos', ferias.alunosExternos || '0']
   ];
 
   return (
@@ -21,7 +21,7 @@ export default function FeriasMovimento({ data }) {
           <div>
             <span className="eyebrow">Dom Bosco</span>
             <h2>Férias em Movimento</h2>
-            <p>Acompanhamento comercial de inscritos, pagantes, cortesias, pacotes vendidos e cadastros em branco.</p>
+            <p>Acompanhamento comercial de inscritos, pagantes, cortesias, pacotes vendidos e alunos externos.</p>
           </div>
         </div>
 
